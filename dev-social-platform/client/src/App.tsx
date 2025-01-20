@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+// import { useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/Shared/ProtectedRoute";
+// import { fetchCurrentUser } from "./features/auth/authSlice";
+import Navbar from "./components/Shared/Navbar";
+import Feed from "./pages/Feed";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import { useAppSelector } from "./redux/store";
+const App = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      {user && <Navbar />}
+      <main className="w-full max-w-sm">
+        <Routes>
+          {/* If user is logged in, redirect to /feed, otherwise to /login */}
+          <Route
+            path="/"
+            element={user ? <Navigate to="/feed" replace /> : <Login />}
+          />
 
-export default App
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/feed" replace /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/feed" replace /> : <Register />}
+          />
+
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/feed" element={<Feed />} />
+          </Route>
+
+          {/* Handling non-existent routes */}
+          <Route
+            path="*"
+            element={<Navigate to={user ? "/feed" : "/login"} replace />}
+          />
+        </Routes>
+      </main>
+    </div>
+  );
+};
+
+export default App;

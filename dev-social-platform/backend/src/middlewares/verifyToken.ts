@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const { ACCESS_TOKEN_SECRET } = process.env;
 
 interface AuthenticatedRequest extends Request {
-  user?: JwtPayload & { id: number; email: string };
+  user?: JwtPayload & { username: string; id: number; email: string };
 }
 
 const verifyToken = (
@@ -21,10 +21,13 @@ const verifyToken = (
       token,
       ACCESS_TOKEN_SECRET as string
     ) as JwtPayload & {
+      username: string;
       id: number;
       email: string;
     };
     req.user = decoded;
+    console.log("clg from verify token ", req.user);
+
     next();
   } catch (error) {
     res.status(403).json({ message: "Invalid token" });

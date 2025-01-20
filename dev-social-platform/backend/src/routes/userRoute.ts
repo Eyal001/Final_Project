@@ -8,14 +8,14 @@ const router = express.Router();
  * Public Routes
  */
 router.post("/register", userController.registerUser);
-router.post("/login", userController.loginUser); // Connexion
-router.post("/logout", verifyToken, userController.logoutUser); // Déconnexion
+router.post("/login", userController.loginUser);
+router.post("/logout", verifyToken, userController.logoutUser);
 
 /**
  * Protected Routes
  */
-router.get("/me", verifyToken, userController.verifyAuth); // Récupérer les informations utilisateur
+router.get("/me", verifyToken, userController.verifyAuth);
 
-router.get("/all", verifyToken, userController.getUsers); // Récupérer tous les utilisateurs (protégé)
+router.get("/all", verifyToken, userController.getUsers);
 
 export default router;
