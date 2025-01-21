@@ -30,7 +30,7 @@ export const userModel = {
   getUserByEmail: async (email: string): Promise<User | undefined> => {
     try {
       const user = await db<User>("users")
-        .select("id", "username", "email", "password")
+        .select("id", "username", "email", "password", "profilepicture")
         .where({ email: email.toLowerCase() })
         .first();
       return user;
@@ -41,8 +41,24 @@ export const userModel = {
 
   getUsers: async (): Promise<User[]> => {
     try {
-      const users = await db<User>("users").select("id", "username", "email");
+      const users = await db<User>("users").select(
+        "id",
+        "username",
+        "email",
+        "profilepicture"
+      );
       return users;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getUserById: async (id: number): Promise<User | undefined> => {
+    try {
+      const user = await db<User>("users")
+        .select("id", "username", "email", "profilepicture")
+        .where({ id })
+        .first();
+      return user;
     } catch (error) {
       throw error;
     }

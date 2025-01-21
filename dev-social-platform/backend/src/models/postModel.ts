@@ -22,22 +22,49 @@ export const postModel = {
 
   getAllPosts: async (): Promise<Post[]> => {
     return await db<Post>("posts")
-      .select("id", "userid", "title", "content", "posttype", "createdat")
-      .orderBy("createdat", "desc");
+      .join("users", "posts.userid", "=", "users.id")
+      .select(
+        "posts.id",
+        "posts.title",
+        "posts.content",
+        "posts.posttype",
+        "posts.createdat",
+        "users.username",
+        "users.profilepicture"
+      )
+      .orderBy("posts.createdat", "desc");
   },
 
-  getPostById: async (postId: number): Promise<Post | undefined> => {
-    return await db<Post>("posts")
-      .select("id", "userid", "title", "content", "posttype", "createdat")
-      .where({ id: postId })
+  getPostById: async (postId: number): Promise<any | undefined> => {
+    return await db("posts")
+      .join("users", "posts.userid", "=", "users.id")
+      .select(
+        "posts.id",
+        "posts.title",
+        "posts.content",
+        "posts.posttype",
+        "posts.createdat",
+        "users.username",
+        "users.profilepicture"
+      )
+      .where("posts.id", postId)
       .first();
   },
 
-  getPostsByType: async (postType: "normal" | "question"): Promise<Post[]> => {
-    return await db<Post>("posts")
-      .where({ posttype: postType })
-      .select("id", "userid", "title", "content", "posttype", "createdat")
-      .orderBy("createdat", "desc");
+  getPostsByType: async (postType: "normal" | "question"): Promise<any[]> => {
+    return await db("posts")
+      .join("users", "posts.userid", "=", "users.id")
+      .select(
+        "posts.id",
+        "posts.title",
+        "posts.content",
+        "posts.posttype",
+        "posts.createdat",
+        "users.username",
+        "users.profilepicture"
+      )
+      .where("posts.posttype", postType)
+      .orderBy("posts.createdat", "desc");
   },
 
   deletePost: async (postId: number): Promise<void> => {

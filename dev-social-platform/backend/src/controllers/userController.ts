@@ -6,7 +6,12 @@ import { userModel } from "../models/userModel";
 import { User } from "../types/User";
 
 interface AuthenticatedRequest extends Request {
-  user?: { username: string; id: number; email: string };
+  user?: {
+    username: string;
+    id: number;
+    email: string;
+    profilepicture?: string;
+  };
 }
 
 export const userController = {
@@ -70,6 +75,7 @@ export const userController = {
           username: user.username,
           id: user.id,
           email: user.email,
+          profilepicture: user.profilepicture,
         },
         ACCESS_TOKEN_SECRET as string,
         { expiresIn: "1h" }
@@ -84,7 +90,12 @@ export const userController = {
       /** Response to client */
       res.status(200).json({
         message: "Login Successfully",
-        user: { username: user.username, id: user.id, email: user.email },
+        user: {
+          username: user.username,
+          id: user.id,
+          email: user.email,
+          profilepicture: user.profilepicture,
+        },
         token: accessToken,
       });
     } catch (error: any) {
@@ -124,7 +135,7 @@ export const userController = {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const { username, id, email } = req.user;
+    const { username, id, email, profilepicture } = req.user;
     const { ACCESS_TOKEN_SECRET } = process.env;
 
     if (!ACCESS_TOKEN_SECRET) {
@@ -135,7 +146,7 @@ export const userController = {
     }
 
     const newAccessToken = jwt.sign(
-      { username, id, email },
+      { username, id, email, profilepicture },
       ACCESS_TOKEN_SECRET,
       {
         expiresIn: "1h",
@@ -149,9 +160,16 @@ export const userController = {
 
     res.json({
       message: "Verified",
-      user: { username, id, email },
+      user: { username, id, email, profilepicture },
       token: newAccessToken,
     });
+    console.log("User being sent to frontend: ", {
+      username,
+      id,
+      email,
+      profilepicture,
+    });
+
     return;
   },
 };

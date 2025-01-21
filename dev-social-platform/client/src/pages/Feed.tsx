@@ -1,44 +1,31 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchCurrentUser } from "../features/auth/authSlice";
-import { RootState, useAppDispatch, useAppSelector } from "../redux/store";
-
+import CreatePost from "@/components/Post/CreatePost";
+import PostList from "@/components/Post/PostList";
+import useFetchFeed from "@/hooks/useFetchFeed";
 const Feed = () => {
-  const { user, loading } = useAppSelector((state: RootState) => state.auth);
-  console.log("User from store:", user);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate;
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user) {
-        const fetchUser = async () => {
-          try {
-            await dispatch(fetchCurrentUser()).unwrap();
-          } catch {
-            console.error("Session expired or not authenticated");
-            navigate("/login");
-          }
-        };
-        fetchUser();
-      }
-    };
-    fetchUser();
-  }, [dispatch, navigate, user]);
+  const { user, posts, loading, error } = useFetchFeed("normal");
+
+  if (loading)
+    return <p className="text-center text-lg font-semibold">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <>
-      {loading && <p>Loading...</p>}
+    <div className="max-w-2xl mx-auto py-8">
       {user ? (
-        <>
-          <p>Welcome {user.username} !</p>
-          <h1>Feed</h1>
-          <p>My id: {user.id}</p>
-          <p>My Email: {user.email}</p>
-        </>
+        <div className="mb-6 text-center">
+          <p className="text-xl font-semibold">Welcome {user.username}!</p>
+          <h1 className="text-3xl font-bold mt-2">Feed</h1>
+          <p className="text-gray-500">My id: {user.id}</p>
+          <p className="text-gray-500">My Email: {user.email}</p>
+        </div>
       ) : (
-        <p>User not found. Please log in.</p>
+        <p className="text-center text-red-500">
+          User not found. Please log in.
+        </p>
       )}
-    </>
+      <CreatePost postType="normal" />
+      <PostList posts={posts} />
+    </div>
   );
 };
+
 export default Feed;

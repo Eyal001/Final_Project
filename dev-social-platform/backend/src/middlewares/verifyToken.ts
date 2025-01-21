@@ -3,7 +3,12 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const { ACCESS_TOKEN_SECRET } = process.env;
 
 interface AuthenticatedRequest extends Request {
-  user?: JwtPayload & { username: string; id: number; email: string };
+  user?: JwtPayload & {
+    username: string;
+    id: number;
+    email: string;
+    profilepicture: string;
+  };
 }
 
 const verifyToken = (
@@ -24,6 +29,7 @@ const verifyToken = (
       username: string;
       id: number;
       email: string;
+      profilepicture: string;
     };
     req.user = decoded;
     console.log("clg from verify token ", req.user);

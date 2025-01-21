@@ -5,4 +5,6 @@ export interface Post {
   content?: string;
   posttype: "normal" | "question";
   createdat: Date;
+  username?: string;
+  profilepicture?: string;
 }

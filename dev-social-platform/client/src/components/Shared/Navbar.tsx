@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Home, LogOut, MessageCircleQuestion, User } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -7,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
+  console.log(user);
   const handleLogout = () => {
     dispatch(logoutUser());
   };
@@ -34,6 +35,10 @@ const Navbar = () => {
           <LogOut size={28} />
         </button>
       )}
+      <Avatar>
+        <AvatarImage src={user.profilepicture} />
+        <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
+      </Avatar>
     </nav>
   );
 };
