@@ -3,8 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { db } from "./db/db";
+import likePostRoute from "./routes/likePostRoute";
 import postRouter from "./routes/postRoute";
 import userRouter from "./routes/userRoute";
+
 dotenv.config();
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(
 
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/post-likes", likePostRoute);
+
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
