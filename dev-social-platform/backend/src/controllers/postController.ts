@@ -40,9 +40,10 @@ export const postController = {
   },
 
   getPostById: async (req: Request, res: Response): Promise<void> => {
+    const userId = (req as any).user?.id;
     const { postId } = req.params;
     try {
-      const post = await postModel.getPostById(Number(postId));
+      const post = await postModel.getPostById(Number(postId), userId);
       if (!post) {
         res.status(404).json({ message: "Post not found" });
         return;
@@ -57,6 +58,7 @@ export const postController = {
   },
 
   getPostsByType: async (req: Request, res: Response): Promise<void> => {
+    const userId = (req as any).user?.id;
     const { postType } = req.params;
     if (postType !== "normal" && postType !== "question") {
       res.status(400).json({ message: "Invalid post type" });
@@ -64,7 +66,8 @@ export const postController = {
     }
     try {
       const posts = await postModel.getPostsByType(
-        postType as "normal" | "question"
+        postType as "normal" | "question",
+        userId
       );
       res.status(200).json(posts);
       return;

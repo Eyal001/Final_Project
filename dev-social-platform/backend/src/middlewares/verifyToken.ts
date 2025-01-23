@@ -32,7 +32,7 @@ const verifyToken = (
       profilepicture: string;
     };
     req.user = decoded;
-    console.log("clg from verify token ", req.user);
+    // console.log("clg from verify token ", req.user);
 
     next();
   } catch (error) {

@@ -163,12 +163,6 @@ export const userController = {
       user: { username, id, email, profilepicture },
       token: newAccessToken,
     });
-    console.log("User being sent to frontend: ", {
-      username,
-      id,
-      email,
-      profilepicture,
-    });
 
     return;
   },

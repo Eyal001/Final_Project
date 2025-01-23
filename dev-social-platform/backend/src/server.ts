@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { db } from "./db/db";
+import commentRoute from "./routes/commentRoute";
 import likePostRoute from "./routes/likePostRoute";
 import postRouter from "./routes/postRoute";
 import userRouter from "./routes/userRoute";
@@ -27,14 +28,15 @@ app.use(
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/post-likes", likePostRoute);
+app.use("/api/comments", commentRoute);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 async function testConnection() {
   try {
-    const response = await db("users").select("*");
-    console.log(response);
+    const response = await db("users").select("id");
+    console.log("connected to db");
   } catch (error) {
     console.log(error);
   }

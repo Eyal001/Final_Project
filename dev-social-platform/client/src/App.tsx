@@ -1,8 +1,7 @@
-// import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./components/Shared/ProtectedRoute";
-// import { fetchCurrentUser } from "./features/auth/authSlice";
+import PostDetail from "./components/Post/PostDetail";
 import Navbar from "./components/Shared/Navbar";
+import ProtectedRoute from "./components/Shared/ProtectedRoute";
 import Feed from "./pages/Feed";
 import Login from "./pages/Login";
 import Questions from "./pages/Questions";
@@ -35,6 +34,7 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/feed" element={<Feed />} />
             <Route path="/questions" element={<Questions />} />
+            <Route path="/post/:postId" element={<PostDetail />} />
           </Route>
 
           {/* Handling non-existent routes */}

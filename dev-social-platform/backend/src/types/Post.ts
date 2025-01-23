@@ -7,4 +7,6 @@ export interface Post {
   createdat: Date;
   username?: string;
   profilepicture?: string;
+  likecount?: number;
+  islikedbyuser?: boolean;
 }

@@ -20,24 +20,48 @@ export const postModel = {
     return post;
   },
 
+  // getAllPosts: async (): Promise<Post[]> => {
+  //   return await db<Post>("posts")
+  //     .join("users", "posts.userid", "=", "users.id")
+  //     .select(
+  //       "posts.id",
+  //       "posts.title",
+  //       "posts.content",
+  //       "posts.posttype",
+  //       "posts.createdat",
+  //       "users.username",
+  //       "users.profilepicture"
+  //     )
+  //     .orderBy("posts.createdat", "desc");
+  // },
   getAllPosts: async (): Promise<Post[]> => {
-    return await db<Post>("posts")
-      .join("users", "posts.userid", "=", "users.id")
+    const posts = await db("posts")
+      .join("users", "posts.userid", "users.id")
+      .leftJoin("likes", "posts.id", "likes.postid")
       .select(
         "posts.id",
+        "posts.userid",
         "posts.title",
         "posts.content",
         "posts.posttype",
         "posts.createdat",
         "users.username",
-        "users.profilepicture"
+        "users.profilepicture",
+        db.raw("CAST(COUNT(likes.id) AS INTEGER) as likecount")
       )
+      .groupBy("posts.id", "users.id")
       .orderBy("posts.createdat", "desc");
+    console.log(posts);
+    return posts;
   },
 
-  getPostById: async (postId: number): Promise<any | undefined> => {
-    return await db("posts")
+  getPostById: async (
+    postId: number,
+    userId: number
+  ): Promise<any | undefined> => {
+    const post = await db("posts")
       .join("users", "posts.userid", "=", "users.id")
+      .leftJoin("likes", "posts.id", "likes.postid")
       .select(
         "posts.id",
         "posts.title",
@@ -45,15 +69,36 @@ export const postModel = {
         "posts.posttype",
         "posts.createdat",
         "users.username",
-        "users.profilepicture"
+        "users.profilepicture",
+        db.raw("CAST(COUNT(likes.id) AS INTEGER) as likecount"),
+        db.raw(
+          `EXISTS (
+          SELECT 1 FROM likes 
+          WHERE likes.postid = posts.id 
+          AND likes.userid = ?
+        ) as islikedbyuser`,
+          [userId]
+        )
       )
       .where("posts.id", postId)
+      .groupBy("posts.id", "users.id")
       .first();
+    if (post) {
+      return {
+        ...post,
+        likecount: Number(post.likecount) || 0,
+        islikedbyuser: post.islikedbyuser ? true : false,
+      };
+    }
   },
 
-  getPostsByType: async (postType: "normal" | "question"): Promise<any[]> => {
-    return await db("posts")
+  getPostsByType: async (
+    postType: "normal" | "question",
+    userid: number
+  ): Promise<any[]> => {
+    const posts = await db("posts")
       .join("users", "posts.userid", "=", "users.id")
+      .leftJoin("likes", "posts.id", "likes.postid")
       .select(
         "posts.id",
         "posts.title",
@@ -61,10 +106,26 @@ export const postModel = {
         "posts.posttype",
         "posts.createdat",
         "users.username",
-        "users.profilepicture"
+        "users.profilepicture",
+        db.raw("CAST(COUNT(likes.id) AS INTEGER) as likecount"),
+        db.raw(
+          `EXISTS (
+          SELECT 1 FROM likes 
+          WHERE likes.postid = posts.id 
+          AND likes.userid = ?
+        ) as islikedbyuser`,
+          [userid]
+        )
       )
       .where("posts.posttype", postType)
+      .groupBy("posts.id", "users.id")
       .orderBy("posts.createdat", "desc");
+
+    return posts.map((post) => ({
+      ...post,
+      likecount: Number(post.likecount) || 0,
+      islikedbyuser: post.islikedbyuser ? true : false,
+    }));
   },
 
   deletePost: async (postId: number): Promise<void> => {
