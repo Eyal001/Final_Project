@@ -57,6 +57,11 @@ const PostCard: React.FC<PostCardProps> = ({
           {post.islikedbyuser ? <FaHeart /> : <FaRegHeart />}
         </button>
         <span>{post.likecount} Likes</span>
+        {!isDetailedView && (
+          <span className="ml-4 text-gray-400">
+            💬 {post.commentcount} Comments
+          </span>
+        )}
       </div>
     </div>
   );

@@ -43,6 +43,12 @@ export const commentModel = {
       return [];
     }
   },
+  getCommentsCount: async (postid: number): Promise<number | undefined> => {
+    try {
+      const count = await db("comments").where({ postid }).count();
+      return parseInt(String(count[0].count));
+    } catch (error) {}
+  },
   deleteComment: async (id: number): Promise<number> => {
     try {
       const deletedRows = await db("comments").where({ id }).del();

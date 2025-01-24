@@ -98,7 +98,8 @@ export const postModel = {
   ): Promise<any[]> => {
     const posts = await db("posts")
       .join("users", "posts.userid", "=", "users.id")
-      .leftJoin("likes", "posts.id", "likes.postid")
+      .leftJoin("likes", "posts.id", "=", "likes.postid")
+      .leftJoin("comments", "posts.id", "=", "comments.postid")
       .select(
         "posts.id",
         "posts.title",
@@ -107,7 +108,8 @@ export const postModel = {
         "posts.createdat",
         "users.username",
         "users.profilepicture",
-        db.raw("CAST(COUNT(likes.id) AS INTEGER) as likecount"),
+        db.raw("CAST(COUNT(DISTINCT likes.id) AS INTEGER) as likecount"),
+        db.raw("CAST(COUNT(DISTINCT comments.id) AS INTEGER) as commentcount"),
         db.raw(
           `EXISTS (
           SELECT 1 FROM likes 
@@ -118,13 +120,14 @@ export const postModel = {
         )
       )
       .where("posts.posttype", postType)
-      .groupBy("posts.id", "users.id")
+      .groupBy("posts.id", "users.id", "users.username", "users.profilepicture")
       .orderBy("posts.createdat", "desc");
 
     return posts.map((post) => ({
       ...post,
       likecount: Number(post.likecount) || 0,
       islikedbyuser: post.islikedbyuser ? true : false,
+      commentcount: Number(post.commentcount) || 0,
     }));
   },
 

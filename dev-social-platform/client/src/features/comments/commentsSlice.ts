@@ -1,0 +1,132 @@
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { Comment } from "../../../../backend/src/types/Comment";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface CommentState {
+  comments: Comment[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: CommentState = {
+  comments: [],
+  loading: false,
+  error: null,
+};
+
+export const getCommentsByPostId = createAsyncThunk<
+  Comment[],
+  number,
+  { rejectValue: string }
+>("comments/getCommentsByPostId", async (postId, thunkAPI) => {
+  try {
+    const response = await axios.get(`${apiBaseUrl}/api/comments/${postId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to fetch comments"
+    );
+  }
+});
+
+export const addComment = createAsyncThunk<
+  Comment,
+  { postid: number; content: string },
+  { rejectValue: string }
+>("comments/addComment", async ({ postid, content }, thunkAPI) => {
+  try {
+    const response = await axios.post(
+      `${apiBaseUrl}/api/comments/${postid}`,
+      { content },
+      { withCredentials: true }
+    );
+    return response.data.comment;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to add comment"
+    );
+  }
+});
+
+export const deleteComment = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string }
+>("comments/deleteComment", async (commentId, thunkAPI) => {
+  try {
+    await axios.delete(`${apiBaseUrl}/api/comments/${commentId}`, {
+      withCredentials: true,
+    });
+    return commentId;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to delete comment"
+    );
+  }
+});
+
+const commentsSlice = createSlice({
+  name: "comments",
+  initialState,
+  reducers: {
+    clearComments: (state) => {
+      state.comments = [];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addComment.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add comment";
+      })
+
+      .addCase(
+        addComment.fulfilled,
+        (state, action: PayloadAction<Comment>) => {
+          state.comments.unshift(action.payload);
+          state.loading = false;
+        }
+      )
+      .addCase(deleteComment.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete comment";
+      })
+
+      .addCase(
+        deleteComment.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.comments = state.comments.filter(
+            (c) => c.id !== action.payload
+          );
+          state.loading = false;
+        }
+      )
+      .addCase(getCommentsByPostId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getCommentsByPostId.fulfilled,
+        (state, action: PayloadAction<Comment[]>) => {
+          state.loading = false;
+          state.comments = action.payload;
+        }
+      )
+      .addCase(getCommentsByPostId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch comments";
+      });
+  },
+});
+
+export const { clearComments } = commentsSlice.actions;
+export default commentsSlice.reducer;

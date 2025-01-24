@@ -7,6 +7,7 @@ import {
   unlikePost,
 } from "../../features/posts/postsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
+import CommentList from "../Comment/CommentList";
 import PostCard from "./PostCard";
 
 const PostDetail = () => {
@@ -51,10 +52,7 @@ const PostDetail = () => {
         ← Back
       </button>
       <PostCard post={selectedPost} onLike={handleLike} isDetailedView />
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Comments</h2>
-        <div className="text-gray-500">Comments section coming soon...</div>
-      </div>
+      <CommentList postId={selectedPost.id} />
     </div>
   );
 };

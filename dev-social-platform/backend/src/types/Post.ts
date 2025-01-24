@@ -8,5 +8,6 @@ export interface Post {
   username?: string;
   profilepicture?: string;
   likecount?: number;
+  commentcount?: number;
   islikedbyuser?: boolean;
 }

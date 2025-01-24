@@ -41,16 +41,23 @@ export const commentController = {
 
     try {
       const comments = await commentModel.getCommentsByPostId(Number(postId));
-      if (comments.length === 0) {
-        res.status(404).json({ message: "No comments found for this post" });
-        return;
-      }
       res.status(200).json(comments);
       return;
     } catch (error) {
       console.error("Error fetching comments: ", error);
       res.status(500).json({ message: "Internal server error" });
       return;
+    }
+  },
+  getCommentsCount: async (req: Request, res: Response): Promise<void> => {
+    const { postId } = req.params;
+
+    try {
+      const count = await commentModel.getCommentsCount(Number(postId));
+      res.status(200).json({ postId, comments: count });
+      return;
+    } catch (error) {
+      res.status(400).json({ message: "Error getting like count" });
     }
   },
   deleteComment: async (req: Request, res: Response): Promise<void> => {
