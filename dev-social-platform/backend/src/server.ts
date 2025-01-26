@@ -26,10 +26,10 @@ app.use("/api/post-likes", likePostRoute);
 app.use("/api/comments", commentRoute);
 app.use("/api/comment-likes", likeCommentRoutes);
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../../client/dist", "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
