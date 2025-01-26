@@ -40,8 +40,14 @@ const Register: React.FC = ({
       await dispatch(loginUser({ email, password })).unwrap();
 
       navigate("/feed");
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Registration failed");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log("Login error", error.message);
+        setError(error.message || "registration failed. Please try again.");
+      } else {
+        console.log("Unexpected error", error);
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

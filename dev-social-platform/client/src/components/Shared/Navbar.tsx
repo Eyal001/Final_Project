@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  console.log(user);
   const handleLogout = () => {
     dispatch(logoutUser());
   };
@@ -36,8 +35,8 @@ const Navbar = () => {
         </button>
       )}
       <Avatar>
-        <AvatarImage src={user.profilepicture} />
-        <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
+        <AvatarImage src={user?.profilepicture} />
+        <AvatarFallback>{user?.username.charAt(0)}</AvatarFallback>
       </Avatar>
     </nav>
   );

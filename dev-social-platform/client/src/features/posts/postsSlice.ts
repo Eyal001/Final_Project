@@ -28,9 +28,10 @@ export const fetchPostsByType = createAsyncThunk<
       { withCredentials: true }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.reponse?.data?.message || "Failed to fetch posts"
+      err.response?.data?.message || "Failed to fetch posts"
     );
   }
 });
@@ -45,9 +46,10 @@ export const getPostById = createAsyncThunk<
       withCredentials: true,
     });
     return response.data;
-  } catch (error: any) {
-    thunkAPI.rejectWithValue(
-      error.reponse?.data?.message || "Failed to fetch post"
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      err.response?.data?.message || "Failed to fetch posts"
     );
   }
 });
@@ -62,9 +64,10 @@ export const deletePost = createAsyncThunk<
       withCredentials: true,
     });
     return postId;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to delete post"
+      err.response?.data?.message || "Failed to delete posts"
     );
   }
 });
@@ -81,9 +84,10 @@ export const updatePost = createAsyncThunk<
       { withCredentials: true }
     );
     return response.data.post;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to update post"
+      err.response?.data?.message || "Failed to update posts"
     );
   }
 });
@@ -100,9 +104,10 @@ export const likePost = createAsyncThunk<
       { withCredentials: true }
     );
     return { postid };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Error liking post"
+      err.response?.data?.message || "Error liking post"
     );
   }
 });
@@ -117,9 +122,10 @@ export const unlikePost = createAsyncThunk<
       withCredentials: true,
     });
     return { postid };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Error unliking post"
+      err.response?.data?.message || "Error unliking post"
     );
   }
 });
@@ -137,9 +143,10 @@ export const checkUserLike = createAsyncThunk<
       }
     );
     return { postId, liked: response.data.liked };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Error checking like"
+      err.response?.data?.message || "Error checking like"
     );
   }
 });
@@ -159,9 +166,10 @@ export const createPost = createAsyncThunk<
       withCredentials: true,
     });
     return response.data.post;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to create post"
+      err.response?.data?.message || "Failed to create post"
     );
   }
 });

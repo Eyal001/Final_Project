@@ -14,12 +14,12 @@ interface CommentItemProps {
   comment: {
     id: number;
     userid: number;
-    profilepicture: string;
-    username: string;
+    profilepicture?: string | undefined;
+    username?: string;
     content: string;
-    createdat: string;
-    likecount: number;
-    islikedbyuser: boolean;
+    createdat: Date;
+    likecount?: number | undefined;
+    islikedbyuser?: boolean | undefined;
   };
 }
 

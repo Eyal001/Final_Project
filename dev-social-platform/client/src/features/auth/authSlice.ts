@@ -27,9 +27,10 @@ export const loginUser = createAsyncThunk<
       { withCredentials: true }
     );
     return response.data.user;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Login failed"
+      err.response?.data?.message || "Login failed"
     );
   }
 });
@@ -45,9 +46,10 @@ export const fetchCurrentUser = createAsyncThunk<
     });
 
     return response.data.user;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Unauthorized"
+      err.response?.data?.message || "Unauthorized"
     );
   }
 });
@@ -61,9 +63,10 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
         {},
         { withCredentials: true }
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Logout failed"
+        err.response?.data?.message || "Logout failed"
       );
     }
   }

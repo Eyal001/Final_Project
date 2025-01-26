@@ -27,9 +27,10 @@ export const likeComment = createAsyncThunk<
       { withCredentials: true }
     );
     return { commentId };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Error liking comment"
+      err.response?.data?.message || "Error liking comment"
     );
   }
 });
@@ -44,9 +45,10 @@ export const unlikeComment = createAsyncThunk<
       withCredentials: true,
     });
     return { commentId };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Error unliking comment"
+      err.response?.data?.message || "Error unliking comment"
     );
   }
 });
@@ -61,9 +63,10 @@ export const getCommentsByPostId = createAsyncThunk<
       withCredentials: true,
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to fetch comments"
+      err.response?.data?.message || "Failed to fetch comments"
     );
   }
 });
@@ -80,9 +83,10 @@ export const addComment = createAsyncThunk<
       { withCredentials: true }
     );
     return response.data.comment;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to add comment"
+      err.response?.data?.message || "Failed to add comment"
     );
   }
 });
@@ -99,9 +103,10 @@ export const updateComment = createAsyncThunk<
       { withCredentials: true }
     );
     return response.data.comment;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to update comment"
+      err.response?.data?.message || "Failed to update comment"
     );
   }
 });
@@ -116,9 +121,10 @@ export const deleteComment = createAsyncThunk<
       withCredentials: true,
     });
     return commentId;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Failed to delete comment"
+      err.response?.data?.message || "Failed to delete comment"
     );
   }
 });

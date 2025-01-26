@@ -1,63 +1,3 @@
-// // import { Button } from "@/components/ui/button";
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../features/auth/authSlice";
-import { useAppDispatch } from "../redux/store";
-
-// const Login = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPasword] = useState("");
-//   const [error, setError] = useState("");
-//   const dispatch = useAppDispatch();
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       setError("");
-//       await dispatch(loginUser({ email, password })).unwrap();
-//       navigate("/feed");
-//     } catch (error: any) {
-//       console.log("Login error", error);
-//       setError(error || "Login failed. Please try again.");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Login</h1>
-//       {error && <p>{error}</p>}
-//       <form onSubmit={handleSubmit}>
-//         <div>
-//           <label htmlFor="email">Email:</label>
-//           <input
-//             type="email"
-//             value={email}
-//             onChange={(e) => setEmail(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label htmlFor="password">Password:</label>
-//           <input
-//             type="password"
-//             value={password}
-//             onChange={(e) => setPasword(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <button type="submit">Login</button>
-//         {/* <Button type="submit">Login</Button> */}
-//       </form>
-//       <p>
-//         You are not registered ? <Link to="/register">Register here.</Link>
-//       </p>
-//     </div>
-//   );
-// };
-// export default Login;
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -69,6 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../features/auth/authSlice";
+import { useAppDispatch } from "../redux/store";
 function Login({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPasword] = useState("");
@@ -82,9 +26,14 @@ function Login({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
       setError("");
       await dispatch(loginUser({ email, password })).unwrap();
       navigate("/feed");
-    } catch (error: any) {
-      console.log("Login error", error);
-      setError(error || "Login failed. Please try again.");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log("Login error", error.message);
+        setError(error.message || "Login failed. Please try again.");
+      } else {
+        console.log("Unexpected error", error);
+        setError("An unexpected error occurred.");
+      }
     }
   };
   return (
