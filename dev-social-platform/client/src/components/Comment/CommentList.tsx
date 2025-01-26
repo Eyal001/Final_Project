@@ -14,7 +14,6 @@ interface CommentSectionProps {
 const CommentList: React.FC<CommentSectionProps> = ({ postId }) => {
   const dispatch = useAppDispatch();
   const { comments, loading } = useAppSelector((state) => state.comments);
-  console.log("Current comments in Redux:", comments);
   const [content, setContent] = useState("");
 
   useEffect(() => {

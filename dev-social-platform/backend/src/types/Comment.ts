@@ -6,4 +6,6 @@ export interface Comment {
   createdat: Date;
   username?: string;
   profilepicture?: string;
+  likecount?: number;
+  islikedbyuser?: boolean;
 }

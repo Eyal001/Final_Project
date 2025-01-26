@@ -4,10 +4,10 @@ import dotenv from "dotenv";
 import express from "express";
 import { db } from "./db/db";
 import commentRoute from "./routes/commentRoute";
+import likeCommentRoutes from "./routes/likeCommentRoute";
 import likePostRoute from "./routes/likePostRoute";
 import postRouter from "./routes/postRoute";
 import userRouter from "./routes/userRoute";
-
 dotenv.config();
 const app = express();
 
@@ -29,6 +29,7 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/post-likes", likePostRoute);
 app.use("/api/comments", commentRoute);
+app.use("/api/comment-likes", likeCommentRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

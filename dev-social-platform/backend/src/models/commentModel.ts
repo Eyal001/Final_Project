@@ -22,10 +22,14 @@ export const commentModel = {
       return null;
     }
   },
-  getCommentsByPostId: async (postid: number): Promise<Comment[]> => {
+  getCommentsByPostId: async (
+    postid: number,
+    userid: number
+  ): Promise<Comment[]> => {
     try {
-      const comments = await db<Comment>("comments")
+      const comments = await db("comments")
         .join("users", "users.id", "comments.userid")
+        .leftJoin("comment_likes", "comments.id", "comment_likes.commentid")
         .select(
           "comments.id",
           "comments.userid",
@@ -33,14 +37,50 @@ export const commentModel = {
           "comments.content",
           "comments.createdat",
           "users.username",
-          "users.profilepicture"
+          "users.profilepicture",
+          db.raw("CAST(COUNT(comment_likes.id) AS INTEGER) as likecount"),
+          db.raw(
+            `EXISTS (
+              SELECT 1 FROM comment_likes 
+              WHERE comment_likes.commentid = comments.id 
+              AND comment_likes.userid = ?
+            ) as islikedbyuser`,
+            [userid]
+          )
         )
         .where("comments.postid", postid)
-        .orderBy("comments.createdat", "desc");
-      return comments;
+        .groupBy("comments.id", "users.id")
+        .orderBy("likecount", "desc");
+
+      return comments.map((comment) => ({
+        ...comment,
+        likecount: Number(comment.likecount) || 0,
+        islikedbyuser: comment.islikedbyuser ? true : false,
+      }));
     } catch (error) {
       console.error("Error retrieving comments:", error);
       return [];
+    }
+  },
+  updateComment: async (
+    id: number,
+    content: string
+  ): Promise<Comment | null> => {
+    try {
+      const [updatedComment] = await db<Comment>("comments")
+        .where({ id })
+        .update({ content }, [
+          "id",
+          "userid",
+          "postid",
+          "content",
+          "createdat",
+        ]);
+
+      return updatedComment || null;
+    } catch (error) {
+      console.error("Error updating comment: ", error);
+      return null;
     }
   },
   getCommentsCount: async (postid: number): Promise<number | undefined> => {

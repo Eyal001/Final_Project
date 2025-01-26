@@ -8,4 +8,5 @@ export interface LikeComment {
   id: number;
   userid: number;
   commentid: number;
+  createdat: string;
 }

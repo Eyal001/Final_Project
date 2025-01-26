@@ -64,6 +64,7 @@ export const postModel = {
       .leftJoin("likes", "posts.id", "likes.postid")
       .select(
         "posts.id",
+        "posts.userid",
         "posts.title",
         "posts.content",
         "posts.posttype",
@@ -102,6 +103,7 @@ export const postModel = {
       .leftJoin("comments", "posts.id", "=", "comments.postid")
       .select(
         "posts.id",
+        "posts.userid",
         "posts.title",
         "posts.content",
         "posts.posttype",

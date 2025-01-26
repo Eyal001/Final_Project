@@ -52,6 +52,42 @@ export const getPostById = createAsyncThunk<
   }
 });
 
+export const deletePost = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string }
+>("posts/deletePost", async (postId, thunkAPI) => {
+  try {
+    await axios.delete(`${apiBaseUrl}/api/posts/${postId}`, {
+      withCredentials: true,
+    });
+    return postId;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to delete post"
+    );
+  }
+});
+
+export const updatePost = createAsyncThunk<
+  Post,
+  { postId: number; title: string; content: string },
+  { rejectValue: string }
+>("posts/updatePost", async ({ postId, title, content }, thunkAPI) => {
+  try {
+    const response = await axios.put(
+      `${apiBaseUrl}/api/posts/${postId}`,
+      { title, content },
+      { withCredentials: true }
+    );
+    return response.data.post;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Failed to update post"
+    );
+  }
+});
+
 export const likePost = createAsyncThunk<
   { postid: number },
   number,
@@ -172,6 +208,16 @@ const postsSlice = createSlice({
         state.error = action.payload || "Failed to fetch post";
       })
 
+      .addCase(deletePost.fulfilled, (state, action: PayloadAction<number>) => {
+        state.posts = state.posts.filter((post) => post.id !== action.payload);
+        if (state.selectedPost && state.selectedPost.id === action.payload) {
+          state.selectedPost = null;
+        }
+      })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.error = action.payload || "Failed to delete post";
+      })
+
       .addCase(createPost.pending, (state) => {
         state.loading = true;
       })
@@ -182,6 +228,17 @@ const postsSlice = createSlice({
       .addCase(createPost.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "An error occurred";
+      })
+      .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
+        state.posts = state.posts.map((post) =>
+          post.id === action.payload.id ? action.payload : post
+        );
+        if (state.selectedPost?.id === action.payload.id) {
+          state.selectedPost = action.payload;
+        }
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.error = action.payload || "Failed to update post";
       })
       .addCase(
         likePost.fulfilled,

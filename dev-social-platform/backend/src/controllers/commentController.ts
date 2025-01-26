@@ -31,8 +31,47 @@ export const commentController = {
       return;
     }
   },
+  updateComment: async (req: Request, res: Response): Promise<void> => {
+    const { commentId } = req.params;
+    const { content } = req.body;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
+    if (!commentId || !content) {
+      res.status(400).json({ message: "Comment ID and content are required" });
+      return;
+    }
+
+    try {
+      const updatedComment = await commentModel.updateComment(
+        Number(commentId),
+        content
+      );
+
+      if (!updatedComment) {
+        res.status(404).json({ message: "Comment not found or update failed" });
+        return;
+      }
+
+      res.status(200).json({
+        message: "Comment updated successfully",
+        comment: updatedComment,
+      });
+      return;
+    } catch (error) {
+      console.error("Error updating comment:", error);
+      res.status(500).json({ message: "Internal server error" });
+      return;
+    }
+  },
+
   getCommentsByPostId: async (req: Request, res: Response): Promise<void> => {
     const { postId } = req.params;
+    const userId = (req as any).user?.id;
 
     if (!postId) {
       res.status(400).json({ message: "Post ID is required" });
@@ -40,7 +79,10 @@ export const commentController = {
     }
 
     try {
-      const comments = await commentModel.getCommentsByPostId(Number(postId));
+      const comments = await commentModel.getCommentsByPostId(
+        Number(postId),
+        userId
+      );
       res.status(200).json(comments);
       return;
     } catch (error) {

@@ -1,20 +1,115 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  deleteComment,
+  likeComment,
+  unlikeComment,
+  updateComment,
+} from "@/features/comments/commentsSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { Pencil, X } from "lucide-react";
+import { useState } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-const CommentItem = ({ comment }) => {
+interface CommentItemProps {
+  comment: {
+    id: number;
+    userid: number;
+    profilepicture: string;
+    username: string;
+    content: string;
+    createdat: string;
+    likecount: number;
+    islikedbyuser: boolean;
+  };
+}
+
+const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedContent, setUpdatedContent] = useState(comment.content);
+
+  const handleSave = () => {
+    dispatch(updateComment({ commentId: comment.id, content: updatedContent }));
+    setIsEditing(false);
+  };
+
+  const handleLike = () => {
+    if (comment.islikedbyuser) {
+      dispatch(unlikeComment(comment.id));
+    } else {
+      dispatch(likeComment(comment.id));
+    }
+  };
+
   return (
-    <div key={comment.id} className="border-b border-gray-700 py-2">
-      <div className="flex items-center gap-4 mb-3 text-sm">
-        <Avatar>
-          <AvatarImage src={comment.profilepicture} alt="Profile" />
-          <AvatarFallback>{comment.username?.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <span className="font-semibold text-lg">{comment.username}</span>
+    <div className="border-b border-gray-700 py-2">
+      <div className="flex items-center justify-between text-sm mb-2">
+        <div className="flex items-center gap-4">
+          <Avatar>
+            <AvatarImage src={comment.profilepicture} alt="Profile" />
+            <AvatarFallback>{comment.username?.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <span className="font-semibold text-lg">{comment.username}</span>
+        </div>
+
+        {user?.id === comment.userid && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => dispatch(deleteComment(comment.id))}
+              className="text-red-500 hover:text-red-700"
+            >
+              <X />
+            </button>
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="text-blue-500 hover:text-blue-700"
+            >
+              <Pencil />
+            </button>
+          </div>
+        )}
       </div>
-      <p>{comment.content}</p>
-      <span className="text-sm text-gray-400">
-        Posted on {new Date(comment.createdat).toLocaleDateString()}
-      </span>
+
+      {isEditing ? (
+        <div className="flex flex-col">
+          <input
+            type="text"
+            value={updatedContent}
+            onChange={(e) => setUpdatedContent(e.target.value)}
+            className="w-full p-2 border rounded-lg bg-gray-800 text-white mb-2"
+          />
+          <button
+            onClick={handleSave}
+            className="mt-1 px-4 py-2 bg-green-500 text-white rounded-lg self-end"
+          >
+            Save
+          </button>
+        </div>
+      ) : (
+        <p className="text-gray-300">{comment.content}</p>
+      )}
+
+      <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
+        <span>
+          Posted on {new Date(comment.createdat).toLocaleDateString()}
+        </span>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleLike}
+            className={`${
+              comment.islikedbyuser ? "text-red-500" : "text-gray-400"
+            } hover:text-red-700`}
+          >
+            {comment.islikedbyuser ? <FaHeart /> : <FaRegHeart />}
+          </button>
+          <span>{comment.likecount}</span>
+        </div>
+      </div>
     </div>
   );
 };
+
 export default CommentItem;
