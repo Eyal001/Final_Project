@@ -2,7 +2,7 @@ import {
   addComment,
   clearComments,
   getCommentsByPostId,
-} from "@/features/comments/commentsSlice";
+} from "@/redux/slices/comments/commentsSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect, useState } from "react";
 import CommentItem from "./CommentItem";

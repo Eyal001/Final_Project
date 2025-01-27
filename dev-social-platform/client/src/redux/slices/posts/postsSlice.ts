@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Post } from "../../../../backend/src/types/Post";
+import { Post } from "../../../../../backend/src/types/Post";
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 interface PostState {

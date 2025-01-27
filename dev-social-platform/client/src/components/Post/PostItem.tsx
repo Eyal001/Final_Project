@@ -3,7 +3,7 @@ import {
   likePost,
   unlikePost,
   updatePost,
-} from "@/features/posts/postsSlice";
+} from "@/redux/slices/posts/postsSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useNavigate } from "react-router-dom";
 import { Post } from "./../../../../backend/src/types/Post";

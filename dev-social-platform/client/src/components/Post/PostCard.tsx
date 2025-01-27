@@ -1,8 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Post } from "../../../../backend/src/types/Post";
+import ProfileAvatar from "../Shared/ProfileAvatar";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 interface PostCardProps {
   onClick?: () => void;
@@ -42,10 +45,11 @@ const PostCard: React.FC<PostCardProps> = ({
     >
       <div className="flex items-center justify-between mb-3 text-sm">
         <div className="flex items-center gap-4">
-          <Avatar>
-            <AvatarImage src={post.profilepicture} alt="Profile" />
-            <AvatarFallback>{post.username?.charAt(0)}</AvatarFallback>
-          </Avatar>
+          <ProfileAvatar
+            profilePicture={String(post.profilepicture)}
+            size="h-10 w-10"
+            username={post.username}
+          />
           <span className="font-semibold text-lg">{post.username}</span>
         </div>
 
@@ -77,23 +81,23 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {isEditing ? (
         <>
-          <input
+          <Input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded-lg bg-gray-800 text-white mb-2"
+            className="w-full p-2 border rounded-lg  mb-2"
           />
-          <textarea
+          <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full p-2 border rounded-lg bg-gray-800 text-white"
+            className="w-full p-2 border rounded-lg "
           />
-          <button
+          <Button
             onClick={handleSave}
-            className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg"
+            className="mt-2 px-4 py-2 bg-green-500 rounded-lg"
           >
             Save
-          </button>
+          </Button>
         </>
       ) : (
         <>
@@ -126,7 +130,7 @@ const PostCard: React.FC<PostCardProps> = ({
         </button>
         <span>{post.likecount}</span>
         {!isDetailedView && (
-          <span className="ml-4 text-gray-400">💬 {post.commentcount}</span>
+          <span className="ml-4">💬 {post.commentcount}</span>
         )}
       </div>
     </div>

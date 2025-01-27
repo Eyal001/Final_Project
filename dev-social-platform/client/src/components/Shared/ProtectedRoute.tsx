@@ -1,4 +1,4 @@
-import { fetchCurrentUser } from "@/features/auth/authSlice";
+import { fetchCurrentUser } from "@/redux/slices/auth/authSlice";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/store";

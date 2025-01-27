@@ -4,9 +4,11 @@ import Navbar from "./components/Shared/Navbar";
 import ProtectedRoute from "./components/Shared/ProtectedRoute";
 import Feed from "./pages/Feed";
 import Login from "./pages/Login";
+import ProfilePage from "./pages/ProfilePage";
 import Questions from "./pages/Questions";
 import Register from "./pages/Register";
 import { useAppSelector } from "./redux/store";
+
 const App = () => {
   const { user } = useAppSelector((state) => state.auth);
 
@@ -35,6 +37,7 @@ const App = () => {
             <Route path="/feed" element={<Feed />} />
             <Route path="/questions" element={<Questions />} />
             <Route path="/post/:postId" element={<PostDetail />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           {/* Handling non-existent routes */}

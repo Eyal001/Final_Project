@@ -7,7 +7,7 @@ import {
   likePost,
   unlikePost,
   updatePost,
-} from "../../features/posts/postsSlice";
+} from "../../redux/slices/posts/postsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import CommentList from "../Comment/CommentList";
 import PostCard from "./PostCard";

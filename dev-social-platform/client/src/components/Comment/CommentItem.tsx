@@ -4,7 +4,7 @@ import {
   likeComment,
   unlikeComment,
   updateComment,
-} from "@/features/comments/commentsSlice";
+} from "@/redux/slices/comments/commentsSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Pencil, X } from "lucide-react";
 import { useState } from "react";

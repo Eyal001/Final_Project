@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import authReducer from "../features/auth/authSlice";
-import commentsReducer from "../features/comments/commentsSlice";
-import postsReducer from "../features/posts/postsSlice";
+import authReducer from "./slices/auth/authSlice";
+import commentsReducer from "./slices/comments/commentsSlice";
+import postsReducer from "./slices/posts/postsSlice";
 
 export const store = configureStore({
   reducer: {

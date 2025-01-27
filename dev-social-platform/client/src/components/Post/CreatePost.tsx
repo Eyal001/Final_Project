@@ -1,7 +1,8 @@
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { createPost } from "../../features/posts/postsSlice";
+import { createPost } from "../../redux/slices/posts/postsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-
+import { Button } from "../ui/button";
 interface CreatePostProps {
   postType: "normal" | "question";
 }
@@ -39,27 +40,27 @@ const CreatePost: React.FC<CreatePostProps> = ({ postType }) => {
       <h2 className="text-xl font-bold mb-2">
         {postType === "normal" ? "What's on your mind?" : "Ask a question"}
       </h2>
-      <textarea
+      <Textarea
         className="w-full p-2 border rounded-md bg-transparent"
         placeholder={postType === "normal" ? "Write a post..." : "Question"}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       {postType === "question" && (
-        <textarea
+        <Textarea
           className="w-full p-2 mt-2 border rounded-md bg-transparent"
           placeholder="Describe your question..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
       )}
-      <button
+      <Button
         className="mt-3 px-4 py-2 bg-primary text-black rounded-md disabled:opacity-50"
         onClick={handlePostSubmit}
         disabled={!title.trim()}
       >
         Post
-      </button>
+      </Button>
     </div>
   );
 };

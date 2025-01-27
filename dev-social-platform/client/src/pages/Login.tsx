@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser } from "../redux/slices/auth/authSlice";
 import { useAppDispatch } from "../redux/store";
 function Login({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");

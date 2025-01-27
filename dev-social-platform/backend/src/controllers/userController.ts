@@ -129,41 +129,109 @@ export const userController = {
     return;
   },
 
-  // Verify authentication and refresh token
-  verifyAuth: (req: AuthenticatedRequest, res: Response): void => {
+  verifyAuth: async (
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<void> => {
     if (!req.user) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const { username, id, email, profilepicture } = req.user;
-    const { ACCESS_TOKEN_SECRET } = process.env;
 
-    if (!ACCESS_TOKEN_SECRET) {
-      res.status(500).json({
-        message: "Access token secret is not defined in environment variables",
+    const { id } = req.user;
+
+    try {
+      const user = await userModel.getUserById(id);
+
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      const { ACCESS_TOKEN_SECRET } = process.env;
+      if (!ACCESS_TOKEN_SECRET) {
+        res.status(500).json({
+          message:
+            "Access token secret is not defined in environment variables",
+        });
+        return;
+      }
+
+      const newAccessToken = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          profilepicture: user.profilepicture,
+        },
+        ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      res.cookie("token", newAccessToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
       });
+
+      res
+        .status(200)
+        .json({ message: "Verified", user, token: newAccessToken });
+    } catch (error) {
+      res.status(500).json({ message: "Error verifying user" });
+    }
+  },
+  updateProfile: async (req: Request, res: Response): Promise<void> => {
+    const userId = (req as any).user?.id;
+    const { username, email, profilePicture, currentPassword, newPassword } =
+      req.body;
+
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
-    const newAccessToken = jwt.sign(
-      { username, id, email, profilepicture },
-      ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: "1h",
+    if (!currentPassword) {
+      res.status(400).json({ message: "Current password is required" });
+      return;
+    }
+
+    try {
+      const user = await userModel.getUserById(userId);
+
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
       }
-    );
 
-    res.cookie("token", newAccessToken, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 1000,
-    });
+      if (!user.password) {
+        res.status(400).json({ message: "User password not found" });
+        return;
+      }
 
-    res.json({
-      message: "Verified",
-      user: { username, id, email, profilepicture },
-      token: newAccessToken,
-    });
+      const isPasswordValid = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+      if (!isPasswordValid) {
+        res.status(400).json({ message: "Incorrect password" });
+        return;
+      }
 
-    return;
+      const updates: Partial<User> = {
+        username,
+        email,
+        profilepicture: profilePicture,
+      };
+
+      if (newPassword) {
+        updates.password = newPassword;
+      }
+
+      await userModel.updateUserProfile(userId, updates);
+      res.status(200).json({ message: "Profile updated successfully" });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Error updating profile" });
+    }
   },
 };

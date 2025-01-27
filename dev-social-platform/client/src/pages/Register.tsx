@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser } from "../redux/slices/auth/authSlice";
 import { useAppDispatch } from "../redux/store";
 
 const Register: React.FC = ({

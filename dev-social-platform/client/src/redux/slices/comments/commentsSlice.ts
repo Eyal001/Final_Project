@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Comment } from "../../../../backend/src/types/Comment";
+import { Comment } from "../../../../../backend/src/types/Comment";
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 interface CommentState {

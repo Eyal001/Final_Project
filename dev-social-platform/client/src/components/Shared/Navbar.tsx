@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Home, LogOut, MessageCircleQuestion, User } from "lucide-react";
+import { Home, LogOut, MessageCircleQuestion, User } from "lucide-react";
 
 import { Link } from "react-router-dom";
-import { logoutUser } from "../../features/auth/authSlice";
+import { logoutUser } from "../../redux/slices/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 const Navbar = () => {
@@ -19,9 +19,6 @@ const Navbar = () => {
       </Link>
       <Link to="/questions" className="hover:text-blue-500 transition">
         <MessageCircleQuestion size={28} />
-      </Link>
-      <Link to="/notifications" className="hover:text-blue-500 transition">
-        <Bell size={28} />
       </Link>
       <Link to="/profile" className="hover:text-blue-500 transition">
         <User size={28} />

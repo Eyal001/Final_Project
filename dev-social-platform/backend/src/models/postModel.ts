@@ -20,20 +20,6 @@ export const postModel = {
     return post;
   },
 
-  // getAllPosts: async (): Promise<Post[]> => {
-  //   return await db<Post>("posts")
-  //     .join("users", "posts.userid", "=", "users.id")
-  //     .select(
-  //       "posts.id",
-  //       "posts.title",
-  //       "posts.content",
-  //       "posts.posttype",
-  //       "posts.createdat",
-  //       "users.username",
-  //       "users.profilepicture"
-  //     )
-  //     .orderBy("posts.createdat", "desc");
-  // },
   getAllPosts: async (): Promise<Post[]> => {
     const posts = await db("posts")
       .join("users", "posts.userid", "users.id")

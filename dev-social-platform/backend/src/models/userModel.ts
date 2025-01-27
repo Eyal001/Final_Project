@@ -55,12 +55,24 @@ export const userModel = {
   getUserById: async (id: number): Promise<User | undefined> => {
     try {
       const user = await db<User>("users")
-        .select("id", "username", "email", "profilepicture")
+        .select("id", "username", "email", "profilepicture", "password")
         .where({ id })
         .first();
       return user;
     } catch (error) {
       throw error;
+    }
+  },
+  updateUserProfile: async (id: number, updates: Partial<User>) => {
+    try {
+      if (updates.password) {
+        updates.password = await bcrypt.hash(updates.password, 10);
+      }
+      await db("users").where({ id }).update(updates);
+      return { success: true };
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      throw new Error("Failed to update profile");
     }
   },
 };

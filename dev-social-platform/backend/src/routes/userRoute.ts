@@ -18,4 +18,6 @@ router.get("/me", verifyToken, userController.verifyAuth);
 
 router.get("/all", verifyToken, userController.getUsers);
 
+router.put("/update-profile", verifyToken, userController.updateProfile);
+
 export default router;
