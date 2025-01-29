@@ -13,7 +13,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" text-white border-border border-t md:border-r md:border-t-0 md:fixed md:left-0 md:top-0 md:h-screen md:w-20 w-full fixed bottom-0 flex md:flex-col flex-row items-center md:py-10 py-3 justify-around">
+    <nav className=" text-white border-gray-700 border-t md:border-r md:border-t-0 md:fixed md:left-0 md:top-0 md:h-screen md:w-20 w-full fixed bottom-0 flex md:flex-col flex-row items-center md:py-10 py-3 justify-around">
       <Link to="/feed" className="hover:text-blue-500 transition">
         <Home size={28} />
       </Link>

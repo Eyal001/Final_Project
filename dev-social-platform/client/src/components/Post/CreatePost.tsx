@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createPost } from "../../redux/slices/posts/postsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Button } from "../ui/button";
+
 interface CreatePostProps {
   postType: "normal" | "question";
 }
@@ -47,12 +48,16 @@ const CreatePost: React.FC<CreatePostProps> = ({ postType }) => {
         onChange={(e) => setTitle(e.target.value)}
       />
       {postType === "question" && (
-        <Textarea
-          className="w-full p-2 mt-2 border rounded-md bg-transparent"
-          placeholder="Describe your question..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+        <>
+          <Textarea
+            className="w-full p-2 mt-2 border rounded-md bg-transparent"
+            placeholder="Describe your question...      Use  <code> Your code <code> for highlight"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+
+          <div className="mt-4"></div>
+        </>
       )}
       <Button
         className="mt-3 px-4 py-2 bg-primary text-black rounded-md disabled:opacity-50"

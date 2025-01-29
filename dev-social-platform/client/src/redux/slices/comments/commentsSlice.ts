@@ -173,7 +173,7 @@ const commentsSlice = createSlice({
         }
       )
       .addCase(addComment.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
       })
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false;
@@ -204,7 +204,7 @@ const commentsSlice = createSlice({
         }
       )
       .addCase(deleteComment.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
       })
       .addCase(deleteComment.rejected, (state, action) => {
         state.loading = false;

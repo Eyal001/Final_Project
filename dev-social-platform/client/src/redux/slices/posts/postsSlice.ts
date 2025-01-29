@@ -227,7 +227,7 @@ const postsSlice = createSlice({
       })
 
       .addCase(createPost.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
       })
       .addCase(createPost.fulfilled, (state, action: PayloadAction<Post>) => {
         state.loading = false;

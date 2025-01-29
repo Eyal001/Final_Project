@@ -37,8 +37,11 @@ function Login({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
     }
   };
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+    <div
+      className={cn("flex py-5 w-full items-center justify-center", className)}
+      {...props}
+    >
+      <Card className="w-full max-w-sm bg-background">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>

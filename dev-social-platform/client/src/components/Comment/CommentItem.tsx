@@ -1,15 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAuth from "@/hooks/useAuth";
 import {
   deleteComment,
   likeComment,
   unlikeComment,
   updateComment,
 } from "@/redux/slices/comments/commentsSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useAppDispatch } from "@/redux/store";
 import { Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
+import { Textarea } from "../ui/textarea";
+import TextWithCode from "./TextWithCode";
 interface CommentItemProps {
   comment: {
     id: number;
@@ -25,7 +27,7 @@ interface CommentItemProps {
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(comment.content);
@@ -48,10 +50,10 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
       <div className="flex items-center justify-between text-sm mb-2">
         <div className="flex items-center gap-4">
           <Avatar>
-            <AvatarImage src={comment.profilepicture} alt="Profile" />
-            <AvatarFallback>{comment.username?.charAt(0)}</AvatarFallback>
+            <AvatarImage src={user?.profilepicture} alt="Profile" />
+            <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="font-semibold text-lg">{comment.username}</span>
+          <span className="font-semibold text-lg">{user?.username}</span>
         </div>
 
         {user?.id === comment.userid && (
@@ -74,11 +76,10 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
 
       {isEditing ? (
         <div className="flex flex-col">
-          <input
-            type="text"
+          <Textarea
             value={updatedContent}
             onChange={(e) => setUpdatedContent(e.target.value)}
-            className="w-full p-2 border rounded-lg bg-gray-800 text-white mb-2"
+            className="w-full p-2 border rounded-lg bg-gray-800 text-white mb-2 h-auto min-h-[300px]"
           />
           <button
             onClick={handleSave}
@@ -88,7 +89,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
           </button>
         </div>
       ) : (
-        <p className="text-gray-300">{comment.content}</p>
+        <TextWithCode content={comment.content ?? ""} />
       )}
 
       <div className="flex items-center justify-between mt-2 text-sm text-gray-400">

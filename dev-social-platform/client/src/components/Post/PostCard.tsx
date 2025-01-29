@@ -2,6 +2,7 @@ import { Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Post } from "../../../../backend/src/types/Post";
+import TextWithCode from "../Comment/TextWithCode";
 import ProfileAvatar from "../Shared/ProfileAvatar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -29,7 +30,6 @@ const PostCard: React.FC<PostCardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content || "");
-
   const handleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
     onUpdate(title, content);
@@ -39,7 +39,7 @@ const PostCard: React.FC<PostCardProps> = ({
   return (
     <div
       onClick={isEditing ? undefined : onClick}
-      className={`border border-border rounded-lg p-4 shadow-sm cursor-pointer hover:bg-zinc-900 transition ${
+      className={`border border-gray-700 rounded-lg p-4 shadow-sm cursor-pointer hover:bg-gray-900 transition ${
         isDetailedView ? "max-w-2xl mx-auto p-6" : ""
       }`}
     >
@@ -108,9 +108,8 @@ const PostCard: React.FC<PostCardProps> = ({
           >
             {post.title}
           </h2>
-          {post.posttype === "question" && (
-            <p className="text-gray-200">{post.content}</p>
-          )}
+
+          <TextWithCode content={post.content ?? ""} />
         </>
       )}
 

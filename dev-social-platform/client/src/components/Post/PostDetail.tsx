@@ -57,7 +57,7 @@ const PostDetail = () => {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-8 max-w-2xl mx-auto border-gray-700">
       <button
         onClick={() => navigate(-1)}
         className="text-blue-500 hover:underline"

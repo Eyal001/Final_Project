@@ -52,8 +52,14 @@ const Register: React.FC = ({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+    <div
+      className={cn(
+        "flex flex-col py-5 w-full items-center justify-center",
+        className
+      )}
+      {...props}
+    >
+      <Card className=" max-w-sm bg-background">
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
           <CardDescription>

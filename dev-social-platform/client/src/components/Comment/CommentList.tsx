@@ -5,6 +5,7 @@ import {
 } from "@/redux/slices/comments/commentsSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect, useState } from "react";
+import { Textarea } from "../ui/textarea";
 import CommentItem from "./CommentItem";
 
 interface CommentSectionProps {
@@ -31,16 +32,15 @@ const CommentList: React.FC<CommentSectionProps> = ({ postId }) => {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 max-w-2xl mx-auto py-8">
       <h2 className="text-xl font-bold mb-4">Comments</h2>
 
       <div className="mb-4">
-        <input
-          type="text"
+        <Textarea
           placeholder="Write a comment..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full p-2 border border-gray-700 rounded-lg bg-gray-800 text-white"
+          className="w-full p-2 border rounded-lg bg-gray-800 text-white mb-2 h-auto min-h-[100px] resize-none"
         />
         <button
           onClick={handleAddComment}
