@@ -50,10 +50,10 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
       <div className="flex items-center justify-between text-sm mb-2">
         <div className="flex items-center gap-4">
           <Avatar>
-            <AvatarImage src={user?.profilepicture} alt="Profile" />
-            <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
+            <AvatarImage src={comment.profilepicture} alt="Profile" />
+            <AvatarFallback>{comment.username?.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="font-semibold text-lg">{user?.username}</span>
+          <span className="font-semibold text-lg">{comment.username}</span>
         </div>
 
         {user?.id === comment.userid && (
